@@ -4,9 +4,6 @@ version = "0.1.0"
 authors = ["kiyami-imac <kiyami_erdim@hotmail.com>"]
 edition = "2018"
 
-[[bin]]
-name="sim2D"
-
 [dependencies]
 piston = "0.42.0"
 piston2d-graphics = "0.30.0"
