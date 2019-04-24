@@ -1,11 +1,13 @@
+
 use crate::vector::Vector;
+//use crate::force::Gravity;
 
 pub struct Particle {
     pub position: Vector,
-    velocity: Vector,
-    acceleration: Vector,
-    mass: f64,
-    color: [f64; 4],
+    pub velocity: Vector,
+    pub acceleration: Vector,
+    pub mass: f64,
+    pub color: [f64; 4],
 }
 
 impl Particle {
@@ -22,4 +24,15 @@ impl Particle {
     pub const velocity_limits: [f64; 2] = [0.0, 100.0];
     pub const mass_limits: [f64; 2] = [0.0, 10.0];
 
+    pub fn move_it(&mut self, f: Vector) {
+        let dt = 1.0;
+        self.position.x += self.velocity.x * dt + 0.5 * self.acceleration.x * dt.powf(2.0);
+        self.position.y += self.velocity.y * dt + 0.5 * self.acceleration.y * dt.powf(2.0);
+
+        self.velocity.x += self.acceleration.x * dt;
+        self.velocity.y += self.acceleration.y * dt;
+
+        self.acceleration.x = f.x / self.mass;
+        self.acceleration.y = f.y / self.mass;
+    }
 }

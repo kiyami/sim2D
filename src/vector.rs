@@ -24,4 +24,14 @@ impl Vector {
     pub fn cos(&self) -> f64 {
         self.y / self.length()
     }
+
+    pub fn distance(v1: &Vector, v2: &Vector) -> Vector {
+        let del_x = v1.x - v2.x;
+        let del_y = v1.y - v2.y;
+        
+        Vector {
+            x: del_x,
+            y: del_y,
+        }
+    }
 }
