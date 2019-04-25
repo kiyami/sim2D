@@ -6,16 +6,18 @@ pub struct Particle {
     pub position: Vector,
     pub velocity: Vector,
     pub acceleration: Vector,
+    pub force: Vector,
     pub mass: f64,
     pub color: [f64; 4],
 }
 
 impl Particle {
-    pub fn new(pos: Vector, vel: Vector, acc: Vector, m: f64, c: [f64; 4]) -> Particle {
+    pub fn new(pos: Vector, vel: Vector, acc: Vector, f: Vector, m: f64, c: [f64; 4]) -> Particle {
         Particle {
             position: pos,
             velocity: vel,
             acceleration: acc,
+            force: f,
             mass: m,
             color: c,
         }

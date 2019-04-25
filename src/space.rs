@@ -37,9 +37,10 @@ impl Space {
             let pos = Vector::new(rand_x, rand_y);
             let vel = Vector::new(rand_vx, rand_vy);
             let acc = Vector::new(0.0, 0.0);
+            let f = Vector::new(0.0, 0.0);
             let m = rand_m;
             let c = [0.0, 0.0, 0.0, 1.0];
-            temp_particles.push(Particle::new(pos, vel, acc, m, c));
+            temp_particles.push(Particle::new(pos, vel, acc, f, m, c));
         }
         Space { size: size, particles: temp_particles, n: n, gl: gl, distance_table: vec![vec![]]}
     }
@@ -71,9 +72,6 @@ impl Space {
             force.push(temp_force);
         }
 
-        for (p, f) in (self.particles.iter(), force.iter_mut()) {
-            *p.move_it(*f);
-        }
     }
 
 
