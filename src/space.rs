@@ -57,9 +57,9 @@ impl Space {
     pub fn action(&self) {
         let G = 1.0;
         let e = 1.0;
-        let mut force: Vec<Vec<Vector>> = vec![];
+        let mut force_list: Vec<Vector> = vec![];
         for p1 in &self.particles {
-            let mut temp_force: Vec<Vector> = vec![];
+            let mut single_force: Vector = Vector::new(0.0, 0.0);
             for p2 in &self.particles {
                 let con = G * p1.mass * p2.mass;
                 let temp_dist = Vector::distance(&p1.position, &p2.position);
@@ -67,9 +67,10 @@ impl Space {
                 let temp_force_x = con * temp_dist.sin() / temp_dist.length();
                 let temp_force_y = con * temp_dist.cos() / temp_dist.length();
 
-                temp_force.push(Vector::new(temp_force_x, temp_force_y));
+                single_force.add_to_self(&Vector::new(temp_force_x, temp_force_y));
             }
-            force.push(temp_force);
+            single_force.info();
+            force_list.push(single_force);
         }
 
     }

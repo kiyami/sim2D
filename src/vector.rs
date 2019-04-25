@@ -9,6 +9,10 @@ impl Vector {
         Vector { x: x, y: y}
     }
 
+    pub fn info(&self) {
+        println!("x: {}, y: {}", self.x, self.y);
+    }
+
     pub fn length(&self) -> f64 {
         (self.x.powf(2.0) + self.y.powf(2.0)).sqrt()
     }
@@ -25,10 +29,22 @@ impl Vector {
         self.y / self.length()
     }
 
+    pub fn add_to_self(&mut self, other: &Vector) {
+        self.x += other.x;
+        self.y += other.y;
+    }
+
+    pub fn sum(v1: &Vector, v2: &Vector) -> Vector {
+        Vector {
+            x: v1.x + v2.x,
+            y: v1.y + v2.y,
+        }
+    }
+
     pub fn distance(v1: &Vector, v2: &Vector) -> Vector {
         let del_x = v1.x - v2.x;
         let del_y = v1.y - v2.y;
-        
+
         Vector {
             x: del_x,
             y: del_y,
