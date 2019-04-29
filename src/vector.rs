@@ -42,8 +42,8 @@ impl Vector {
     }
 
     pub fn distance(v1: &Vector, v2: &Vector) -> Vector {
-        let del_x = v1.x - v2.x;
-        let del_y = v1.y - v2.y;
+        let del_x = v2.x - v1.x;
+        let del_y = v2.y - v1.y;
 
         Vector {
             x: del_x,
