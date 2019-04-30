@@ -22,12 +22,23 @@ pub struct Space {
 }
 
 impl Space {
-    pub fn fill(size: [u32; 2], n: u32, gl: GlGraphics) -> Space {
+    pub fn fill(size: &[u32; 2], n: u32, gl: GlGraphics) -> Space {
         let mut rng = rand::thread_rng();
         let mut temp_particles: Vec<Particle> = vec![];
-        for i in 0..n {
-            let rand_x = rng.gen_range(0.0, size[0] as f64);
-            let rand_y = rng.gen_range(0.0, size[1] as f64);
+
+        let init_pos = Vector::new((size[0] as f64)/2.0, (size[1] as f64)/2.0);
+        let init_vel = Vector::new(0.0, 0.0);
+        let init_acc = Vector::new(0.0, 0.0);
+        let init_f = Vector::new(0.0, 0.0);
+        let init_m = 1500.0;
+        let init_r = 7.0;
+        let init_c = [0.5, 0.1, 0.1, 1.0];
+        let mut initial_particle = Particle::new(init_pos, init_vel, init_acc, init_f, init_m, init_r, init_c);
+        temp_particles.push(initial_particle);
+
+        for i in 0..(n-1) {
+            let rand_x = rng.gen_range((size[0] as f64) * 0.4, (size[0] as f64) * 0.6);
+            let rand_y = rng.gen_range((size[1] as f64) * 0.4, (size[1] as f64) * 0.6);
 
             let rand_vx = rng.gen_range(Particle::velocity_limits[0], Particle::velocity_limits[1]);
             let rand_vy = rng.gen_range(Particle::velocity_limits[0], Particle::velocity_limits[1]);
@@ -40,10 +51,15 @@ impl Space {
             let acc = Vector::new(0.0, 0.0);
             let f = Vector::new(0.0, 0.0);
             let m = rand_m;
+
+            let del_m = Particle::mass_limits[1] - Particle::mass_limits[0];
+            let del_r = Particle::radius_limits[1] - Particle::radius_limits[0];
+
+            let r = ((m - Particle::mass_limits[0]) * (del_r / del_m)) + Particle::radius_limits[0];
             let c = [0.0, 0.0, 0.0, 1.0];
-            temp_particles.push(Particle::new(pos, vel, acc, f, m, c));
+            temp_particles.push(Particle::new(pos, vel, acc, f, m, r, c));
         }
-        Space { size: size, particles: temp_particles, n: n, gl: gl, distance_table: vec![vec![]]}
+        Space { size: *size, particles: temp_particles, n: n, gl: gl, distance_table: vec![vec![]]}
     }
 
     pub fn info(&self) {
@@ -56,17 +72,21 @@ impl Space {
     }
 
     pub fn calculate_force(&self) -> Vec<Vector> {
-        let G = 0.0;
-        let e = 0.01;
+        let G = 0.001;
+        let e = 0.1;
         let mut force_list: Vec<Vector> = vec![];
         for p1 in &self.particles {
             let mut single_force: Vector = Vector::new(0.0, 0.0);
             for p2 in &self.particles {
                 let con = G * p1.mass * p2.mass;
                 let temp_dist: Vector = Vector::distance(&p1.position, &p2.position);
-                let temp_force_x = con * temp_dist.sin() / temp_dist.length();
-                let temp_force_y = con * temp_dist.cos() / temp_dist.length();
-                single_force.add_to_self(&Vector::new(temp_force_x, temp_force_y));
+                if temp_dist.length() !=  0.0 {
+                    let temp_force_x = con * temp_dist.sin() / temp_dist.length();
+                    let temp_force_y = con * temp_dist.cos() / temp_dist.length();
+                    single_force.add_to_self(&Vector::new(temp_force_x, temp_force_y));
+                } else {
+                    single_force.add_to_self(&Vector::new(0.0, 0.0));
+                }
             }
             //let mut single_force: Vector = Vector::new(20.0, 20.0);
             force_list.push(single_force);
@@ -81,16 +101,18 @@ impl Space {
         const ORANGE:   [f32; 4] = [0.9, 0.8, 0.6, 0.8];
         const BLUE:   [f32; 4] = [0.5, 0.7, 0.8, 0.7];
         const BLACK:   [f32; 4] = [0.0, 0.0, 0.0, 1.0];
+        const WHITE:   [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 
         clear(BLUE, &mut self.gl);
 
         for particle in self.particles.iter() {
-            let square = rectangle::square(0.0, 0.0, 10.0);
+            let radius = particle.radius;
+            let square = rectangle::square(0.0, 0.0, radius);
             let (x, y) = (particle.position.x, particle.position.y);
 
             self.gl.draw(args.viewport(), |c, gl| {
                 let transform = c.transform.trans(x, y);
-                rectangle(BLACK, square, transform, gl);
+                rectangle(particle.color, square, transform, gl);
             });
         }
     }

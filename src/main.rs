@@ -22,7 +22,7 @@ use vector::Vector;
 fn main() {
     // Change this to OpenGL::V2_1 if not working.
     let opengl = OpenGL::V3_2;
-    let window_size = [600, 600];
+    let window_size = [800, 800];
     // Create an Glutin window.
     let mut window: Window = WindowSettings::new(
             "gravitation",
@@ -34,13 +34,14 @@ fn main() {
         .unwrap();
 
 
-    let mut space = Space::fill([600, 600], 10, GlGraphics::new(opengl));
+    let mut space = Space::fill(&window_size, 250, GlGraphics::new(opengl));
     let mut p1 = Particle::new(
         Vector::new(0.0, 0.0),
         Vector::new(0.0, 0.0),
         Vector::new(0.0, 0.0),
         Vector::new(0.0, 0.0),
         1.0,
+        10.0,
         [0.0, 0.0, 0.0, 1.0],);
 
     space.info();
