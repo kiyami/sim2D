@@ -34,7 +34,7 @@ fn main() {
         .unwrap();
 
 
-    let mut space = Space::fill(&window_size, 250, GlGraphics::new(opengl));
+    let mut space = Space::fill(&window_size, 200, GlGraphics::new(opengl));
     let mut p1 = Particle::new(
         Vector::new(0.0, 0.0),
         Vector::new(0.0, 0.0),

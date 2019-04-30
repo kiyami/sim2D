@@ -30,7 +30,7 @@ impl Space {
         let init_vel = Vector::new(0.0, 0.0);
         let init_acc = Vector::new(0.0, 0.0);
         let init_f = Vector::new(0.0, 0.0);
-        let init_m = 1500.0;
+        let init_m = 1_500.0;
         let init_r = 7.0;
         let init_c = [0.5, 0.1, 0.1, 1.0];
         let mut initial_particle = Particle::new(init_pos, init_vel, init_acc, init_f, init_m, init_r, init_c);
@@ -56,7 +56,9 @@ impl Space {
             let del_r = Particle::radius_limits[1] - Particle::radius_limits[0];
 
             let r = ((m - Particle::mass_limits[0]) * (del_r / del_m)) + Particle::radius_limits[0];
-            let c = [0.0, 0.0, 0.0, 1.0];
+
+            let color_weight = (m - Particle::mass_limits[0])/(Particle::mass_limits[1] - Particle::mass_limits[0]);
+            let c = [(color_weight as f32)*0.1, (color_weight as f32)*0.6, (color_weight as f32)*0.6, 1.0];
             temp_particles.push(Particle::new(pos, vel, acc, f, m, r, c));
         }
         Space { size: *size, particles: temp_particles, n: n, gl: gl, distance_table: vec![vec![]]}
@@ -99,11 +101,12 @@ impl Space {
         use graphics::*;
 
         const ORANGE:   [f32; 4] = [0.9, 0.8, 0.6, 0.8];
-        const BLUE:   [f32; 4] = [0.5, 0.7, 0.8, 0.7];
+        const BLUE:   [f32; 4] = [0.5, 0.7, 0.8, 0.8];
         const BLACK:   [f32; 4] = [0.0, 0.0, 0.0, 1.0];
         const WHITE:   [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 
-        clear(BLUE, &mut self.gl);
+        //clear(BLUE, &mut self.gl);
+        clear([0.80, 0.85, 0.90, 1.0], &mut self.gl);
 
         for particle in self.particles.iter() {
             let radius = particle.radius;

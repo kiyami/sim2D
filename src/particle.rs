@@ -15,7 +15,7 @@ pub struct Particle {
 impl Particle {
     pub const velocity_limits: [f64; 2] = [-5.0, 5.0];
     pub const mass_limits: [f64; 2] = [1.0, 500.0];
-    pub const radius_limits: [f64; 2] = [1.5, 5.0];
+    pub const radius_limits: [f64; 2] = [2.0, 5.0];
 
     pub fn new(pos: Vector, vel: Vector, acc: Vector, f: Vector, m: f64, r: f64, c: [f32; 4]) -> Particle {
         Particle {
@@ -39,7 +39,7 @@ impl Particle {
             //self.velocity.x *= 0.8;
         }
 
-        let dt = 1.0e-1;
+        let dt = 1.5e-1;
 
         self.position.x += self.velocity.x * dt + (0.5 * self.acceleration.x * dt.powf(2.0));
         self.position.y += self.velocity.y * dt + (0.5 * self.acceleration.y * dt.powf(2.0));
