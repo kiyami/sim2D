@@ -56,7 +56,7 @@ impl Space {
     }
 
     pub fn calculate_force(&self) -> Vec<Vector> {
-        let G = 1.0e-12;
+        let G = 0.0;
         let e = 0.01;
         let mut force_list: Vec<Vector> = vec![];
         for p1 in &self.particles {
@@ -68,6 +68,7 @@ impl Space {
                 let temp_force_y = con * temp_dist.cos() / temp_dist.length();
                 single_force.add_to_self(&Vector::new(temp_force_x, temp_force_y));
             }
+            //let mut single_force: Vector = Vector::new(20.0, 20.0);
             force_list.push(single_force);
         }
         force_list
@@ -95,8 +96,10 @@ impl Space {
     }
 
     pub fn update(&mut self, args: &UpdateArgs) {
+        //let force = Vector::new(0.0, 0.0);
+        let force = self.calculate_force();
         for i in 0..self.n {
-            self.particles[i as usize].update(self.size);
+            self.particles[i as usize].update(self.size, &force[i as usize]);
         }
     }
 }

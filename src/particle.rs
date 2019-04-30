@@ -12,6 +12,9 @@ pub struct Particle {
 }
 
 impl Particle {
+    pub const velocity_limits: [f64; 2] = [-20.0, 20.0];
+    pub const mass_limits: [f64; 2] = [1.0, 200.0];
+
     pub fn new(pos: Vector, vel: Vector, acc: Vector, f: Vector, m: f64, c: [f64; 4]) -> Particle {
         Particle {
             position: pos,
@@ -23,11 +26,7 @@ impl Particle {
         }
     }
 
-    pub const velocity_limits: [f64; 2] = [-20.0, 20.0];
-    pub const mass_limits: [f64; 2] = [1.0, 200.0];
-
-
-    pub fn update(&mut self, size: [u32; 2]) {
+    pub fn update(&mut self, size: [u32; 2], force: &Vector) {
         if (self.position.x > (size[0] as f64)) || (self.position.x < 0.0) {
             self.velocity.x *= -1.0;
         }
@@ -42,6 +41,12 @@ impl Particle {
 
         self.velocity.x += self.acceleration.x * dt;
         self.velocity.y += self.acceleration.y * dt;
+
+        self.force.x = force.x;
+        self.force.y = force.y;
+
+        self.acceleration.x = self.force.x / self.mass;
+        self.acceleration.y = self.force.y / self.mass;
 
     }
 }
