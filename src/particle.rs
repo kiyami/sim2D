@@ -16,9 +16,11 @@ impl Particle {
     pub const solar_mass: f64 = 1.9891e30; // kg
     pub const mpc_to_m: f64 = 3.08567758128e22;
     pub const m_to_mpc: f64 = 3.240779289e-23;
+    pub const pixel_to_mpc: f64 = 0.01;
+    pub const mpc_to_pixel: f64 = 100.0;
 
     pub const velocity_limits: [f64; 2] = [-5.0, 5.0];
-    pub const mass_limits: [f64; 2] = [100.0, 1000.0];
+    pub const mass_limits: [f64; 2] = [100.0, 1000.0]; // M_sun^e11;
     pub const radius_limits: [f64; 2] = [2.0, 5.0];
 
     pub fn new(pos: Vector, vel: Vector, acc: Vector, f: Vector, m: f64, r: f64, c: [f32; 4]) -> Particle {

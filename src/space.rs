@@ -136,7 +136,7 @@ impl Space {
     }
 
     pub fn calculate_force(&self) -> Vec<Vector> {
-        let G = 6.6740831e-11; // m3 kg-1 s-2
+        let G = 0.001;
         let e = 0.2;
         let mut force_list: Vec<Vector> = vec![];
         for p1 in &self.particles {
