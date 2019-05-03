@@ -34,15 +34,26 @@ fn main() {
         .unwrap();
 
 
-    let mut space = Space::fill(&window_size, 200, GlGraphics::new(opengl));
-    let mut p1 = Particle::new(
-        Vector::new(0.0, 0.0),
-        Vector::new(0.0, 0.0),
-        Vector::new(0.0, 0.0),
-        Vector::new(0.0, 0.0),
-        1.0,
-        10.0,
-        [0.0, 0.0, 0.0, 1.0],);
+
+    let center: [f64; 2] = [300.0, 300.0];
+    let radius: f64 = 50.0;
+    let n: u32 = 50;
+    let pc: u32 = 1;
+    let mut space = Space::new(&window_size, GlGraphics::new(opengl));
+    space.fill(&center, radius, n, pc);
+
+    let center: [f64; 2] = [500.0, 500.0];
+    let radius: f64 = 50.0;
+    let n: u32 = 50;
+    let pc: u32 = 2;
+    space.fill(&center, radius, n, pc);
+
+    let center: [f64; 2] = [500.0, 300.0];
+    let radius: f64 = 50.0;
+    let n: u32 = 50;
+    let pc: u32 = 3;
+    space.fill(&center, radius, n, pc);
+    //let mut space = Space::fill(&window_size, 10, GlGraphics::new(opengl));
 
     space.info();
 

@@ -9,6 +9,10 @@ impl Vector {
         Vector { x: x, y: y}
     }
 
+    pub fn zero() -> Vector {
+        Vector { x: 0.0, y: 0.0}
+    }
+
     pub fn info(&self) {
         println!("x: {}, y: {}", self.x, self.y);
     }

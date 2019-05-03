@@ -17,12 +17,74 @@ pub struct Space {
     pub particles: Vec<Particle>,
     pub n: u32,
     pub gl: GlGraphics,
-
-    pub distance_table: Vec<Vec<f64>>,
 }
 
 impl Space {
-    pub fn fill(size: &[u32; 2], n: u32, gl: GlGraphics) -> Space {
+    pub fn new(size: &[u32; 2], gl: GlGraphics) -> Space {
+        let mut empty_particle_vector: Vec<Particle> = vec![];
+        Space {
+            size: *size,
+            particles: empty_particle_vector,
+            n: 0u32,
+            gl: gl
+        }
+    }
+
+    pub fn fill(&mut self, center: &[f64; 2], radius: f64, n: u32, pc: u32) {
+        let mut rng = rand::thread_rng();
+        let pi = std::f64::consts::PI;
+
+        let init_pos = Vector::new(center[0], center[1]);
+        let init_vel = Vector::new(0.0, 0.0);
+        let init_acc = Vector::new(0.0, 0.0);
+        let init_f = Vector::new(0.0, 0.0);
+        let init_m = 5_000.0;
+        let init_r = 8.0;
+        let init_c = [0.5, 0.1, 0.1, 1.0];
+        let mut initial_particle = Particle::new(init_pos, init_vel, init_acc, init_f, init_m, init_r, init_c);
+        self.particles.push(initial_particle);
+        self.n += 1;
+
+        for i in 0..n {
+            let rand_angle = rng.gen_range(0.0, 2.0 * pi);
+            let rand_radius = rng.gen_range(0.0, radius);
+
+            let x = center[0] + (rand_radius * rand_angle.sin());
+            let y = center[1] + (rand_radius * rand_angle.cos());
+
+            let vx = rng.gen_range(Particle::velocity_limits[0], Particle::velocity_limits[1]);
+            let vy = rng.gen_range(Particle::velocity_limits[0], Particle::velocity_limits[1]);
+
+            let m = rng.gen_range(Particle::mass_limits[0], Particle::mass_limits[1]);
+
+            let pos = Vector::new(x, y);
+            let vel = Vector::new(vx, vy);
+            let acc = Vector::zero();
+            let f = Vector::zero();
+
+            // particle radius related to mass
+            let del_m = Particle::mass_limits[1] - Particle::mass_limits[0];
+            let del_r = Particle::radius_limits[1] - Particle::radius_limits[0];
+
+            let r = ((m - Particle::mass_limits[0]) * (del_r / del_m)) + Particle::radius_limits[0];
+
+            // particle color related to mass
+            let mut c = [0.0, 0.0, 0.0, 1.0];
+            let color_weight = (m - Particle::mass_limits[0])/(Particle::mass_limits[1] - Particle::mass_limits[0]);
+            if pc == 1 {
+                c = [(color_weight as f32)*0.1, (color_weight as f32)*0.6, (color_weight as f32)*0.6, 1.0];
+            } else if pc == 2 {
+                c = [(color_weight as f32)*0.6, (color_weight as f32)*0.2, (color_weight as f32)*0.1, 1.0];
+            } else if pc == 3 {
+                c = [(color_weight as f32)*0.1, (color_weight as f32)*0.6, (color_weight as f32)*0.1, 1.0];
+            }
+
+            self.particles.push(Particle::new(pos, vel, acc, f, m, r, c));
+            self.n += 1;
+        }
+    }
+
+    pub fn fill_2(size: &[u32; 2], n: u32, gl: GlGraphics) -> Space {
         let mut rng = rand::thread_rng();
         let mut temp_particles: Vec<Particle> = vec![];
 
@@ -61,7 +123,7 @@ impl Space {
             let c = [(color_weight as f32)*0.1, (color_weight as f32)*0.6, (color_weight as f32)*0.6, 1.0];
             temp_particles.push(Particle::new(pos, vel, acc, f, m, r, c));
         }
-        Space { size: *size, particles: temp_particles, n: n, gl: gl, distance_table: vec![vec![]]}
+        Space { size: *size, particles: temp_particles, n: n, gl: gl}
     }
 
     pub fn info(&self) {
@@ -75,7 +137,7 @@ impl Space {
 
     pub fn calculate_force(&self) -> Vec<Vector> {
         let G = 0.001;
-        let e = 0.1;
+        let e = 0.2;
         let mut force_list: Vec<Vector> = vec![];
         for p1 in &self.particles {
             let mut single_force: Vector = Vector::new(0.0, 0.0);

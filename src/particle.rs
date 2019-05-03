@@ -14,7 +14,7 @@ pub struct Particle {
 
 impl Particle {
     pub const velocity_limits: [f64; 2] = [-5.0, 5.0];
-    pub const mass_limits: [f64; 2] = [1.0, 500.0];
+    pub const mass_limits: [f64; 2] = [100.0, 1000.0];
     pub const radius_limits: [f64; 2] = [2.0, 5.0];
 
     pub fn new(pos: Vector, vel: Vector, acc: Vector, f: Vector, m: f64, r: f64, c: [f32; 4]) -> Particle {
