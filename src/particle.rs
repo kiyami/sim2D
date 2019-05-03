@@ -13,6 +13,10 @@ pub struct Particle {
 }
 
 impl Particle {
+    pub const solar_mass: f64 = 1.9891e30; // kg
+    pub const mpc_to_m: f64 = 3.08567758128e22;
+    pub const m_to_mpc: f64 = 3.240779289e-23;
+
     pub const velocity_limits: [f64; 2] = [-5.0, 5.0];
     pub const mass_limits: [f64; 2] = [100.0, 1000.0];
     pub const radius_limits: [f64; 2] = [2.0, 5.0];
